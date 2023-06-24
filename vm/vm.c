@@ -21,6 +21,7 @@ void vm_init(void)
 	register_inspect_intr();
 	/* DO NOT MODIFY UPPER LINES. */
 	/* TODO: Your code goes here. */
+	list_init(&frame_list);
 }
 
 /* Get the type of the page. This function is useful if you want to know the
@@ -118,13 +119,23 @@ void spt_remove_page(struct supplemental_page_table *spt, struct page *page)
 }
 
 /* Get the struct frame, that will be evicted. */
-static struct frame *
-vm_get_victim(void)
+static struct frame* vm_get_victim(void)
 {
-	struct frame *victim = NULL;
-	/* TODO: The policy for eviction is up to you. */
+    struct list_elem* victim_elem;
+    struct frame* victim;
+    
+    while (true) {
+        victim_elem = list_pop_front(&frame_list);
+        victim = list_entry(victim_elem, struct frame, frame_elem);
 
-	return victim;
+        if (!pml4_is_accessed(thread_current()->pml4, victim->page->va))
+            break;
+
+        pml4_set_accessed(thread_current()->pml4, victim->page->va, 0);
+        list_push_back(&frame_list, victim_elem);
+    }
+
+    return victim;
 }
 
 /* Evict one page and return the corresponding frame.
@@ -134,8 +145,8 @@ vm_evict_frame(void)
 {
 	struct frame *victim UNUSED = vm_get_victim();
 	/* TODO: swap out the victim and return the evicted frame. */
-
-	return NULL;
+	swap_out(victim->page);
+	return victim;
 }
 
 /* palloc() and get frame. If there is no available page, evict the page
@@ -149,11 +160,11 @@ vm_get_frame(void)
 	frame->kva = palloc_get_page(PAL_USER);
 	if (frame->kva == NULL)
 	{
-		frame->page = NULL;
-		PANIC("todo");
+		frame = vm_evict_frame();
 	}
 	/* TODO: Fill this function. */
 	frame->page = NULL;
+	list_push_back(&frame_list, &frame->frame_elem);
 	ASSERT(frame != NULL);
 	ASSERT(frame->page == NULL);
 	return frame;
@@ -331,8 +342,8 @@ void supplemental_page_table_kill(struct supplemental_page_table *spt UNUSED)
 			if(target->operations->type == VM_FILE){
 				do_munmap(target->va);
 			}
+			// TODO: @@@@ 혹시 모를 찝찝함.....
 		}
-		
 		hash_destroy(&spt->vm, spt_dealloc);
 		free(frame);
 	}
