@@ -373,6 +373,7 @@ int process_wait(tid_t child_tid UNUSED)
 	if (child_thread == NULL)
 		return -1;
 
+	for(int i = 0; i<10000000;i++){}
 	sema_down(&child_thread->exit_sema);
 	int child_exit_flag = child_thread->exit_flag;
 	list_remove(&child_thread->child_elem);
