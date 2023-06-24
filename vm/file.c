@@ -28,10 +28,7 @@ file_backed_initializer (struct page *page, enum vm_type type, void *kva) {
 	page->operations = &file_ops;
 
 	struct file_page *file_page = &page->file;
-	// TODO: 정한 왈 일단 그냥 두자....
-	// file_page->offset = aux->offset;
-	// file_page->file = aux->file;
-	// file_page->read_bytes = aux->read_bytes;
+	
 }
 
 /* Swap in the page by read contents from the file. */
@@ -56,7 +53,11 @@ static bool
 file_backed_swap_out (struct page *page) {
 	struct file_page *file_page UNUSED = &page->file;
 
-	struct info* info = (struct info*)page->uninit.aux;
+	struct info *info = (struct info*)page->uninit.aux;
+	file_page->offset = ((struct info*)page->uninit.aux)->offset;
+	file_page->file = ((struct info*)page->uninit.aux)->file;
+	file_page->read_bytes = ((struct info*)page->uninit.aux)->read_bytes;
+
 	if(pml4_is_dirty(thread_current()->pml4, page->va)){
 		lock_acquire(&filesys_lock);
 		file_write_at(info->file, page->va, info->read_bytes, info->offset);
@@ -96,10 +97,11 @@ static bool lazy_mmap(struct page *page, void *aux) {
 	if (file_read_at(file, load_frame->kva, page_read_bytes, offset) != (int)page_read_bytes)
 	{
 		free(page);
+		free(file_info);
 		return false;
 	}
-
 	memset(load_frame->kva + page_read_bytes, 0, page_zero_bytes);
+
 	return true;
 }
 

@@ -273,7 +273,6 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
    	{
    		struct page *page = hash_entry (hash_cur (&i), struct page, h_elem);
 		if(page->uninit.aux != NULL){
-			// TODO: @@@@ 혹시 모를 찝찝함.....
 			struct info *aux = (struct info*)malloc(sizeof(struct info));
 			memcpy(aux, page->uninit.aux, sizeof(struct info));
 			vm_alloc_page_with_initializer(page->uninit.type, page->va, page->writable, page->uninit.init, aux);
@@ -289,34 +288,6 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 			}
 			memcpy(child_page->frame->kva, page->frame->kva, PGSIZE);
 		}
-		// switch (page_get_type(page)){
-
-		// case VM_UNINIT:
-		// {
-		// 	struct info *aux = malloc(sizeof(struct info));
-		// 	memcpy(aux, page->uninit.aux, sizeof(struct info));
-		// 	vm_alloc_page_with_initializer(page->uninit.type, page->va, page->writable, page->uninit.init, aux);
-		// 	struct page *child_page = spt_find_page(dst, page->va);
-		// 	succ = vm_do_claim_page(child_page);
-		// 	if(!succ){
-		// 		return false;
-		// 	}
-		// 	if(page->frame != NULL){
-		// 		memcpy(child_page->frame->kva, page->frame->kva, PGSIZE);
-		// 	}
-		// 	break;
-		// }
-		// case VM_ANON:
-		// 	break;
-
-		// case VM_FILE:
-
-		// 	break;
-
-		// default:
-		// 	break;
-		// }
-   	// }
 	}
 	return succ;
 }
@@ -342,7 +313,6 @@ void supplemental_page_table_kill(struct supplemental_page_table *spt UNUSED)
 			if(target->operations->type == VM_FILE){
 				do_munmap(target->va);
 			}
-			// TODO: @@@@ 혹시 모를 찝찝함.....
 		}
 		hash_destroy(&spt->vm, spt_dealloc);
 		free(frame);
