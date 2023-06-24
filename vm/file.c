@@ -89,6 +89,7 @@ do_mmap (void *addr, size_t length, int writable, struct file *file, off_t offse
 
 	struct file *reopen_file = file_reopen(file);
 	size_t file_size = (size_t) file_length(reopen_file);
+	void *init_addr = addr;
 	size_t read_bytes = file_size >= length ? length : file_size;
 	size_t zero_bytes = (PGSIZE - (read_bytes % PGSIZE)) % PGSIZE;
 
@@ -102,7 +103,7 @@ do_mmap (void *addr, size_t length, int writable, struct file *file, off_t offse
 
 		/* project 3 virtual memory */
 		struct info *file_info = (struct info *)malloc(sizeof(struct info));
-		file_info->file = file;
+		file_info->file = reopen_file;
 		file_info->offset = offset;
 		file_info->read_bytes = page_read_bytes;
 
@@ -119,25 +120,27 @@ do_mmap (void *addr, size_t length, int writable, struct file *file, off_t offse
 		addr += PGSIZE;
 		offset += page_read_bytes;
 	}
+	return init_addr;
 }
 
 /* Do the munmap */
 void
 do_munmap (void *addr) {
-	// struct thread *cur = thread_current();
-	// struct page *page = spt_find_page(&cur->spt, addr);
-	// if(page == NULL){
-	// 	return;
-	// }
-	// while(page != NULL){
-	// 	if(pml4_is_dirty(cur->pml4, addr)){
-	// 		lock_acquire(&filesys_lock);
-	// 		file_write_at(page->_file, addr, page->read_bytes, page->offset);
-	// 		lock_release(&filesys_lock);
-	// 		pml4_set_dirty(cur->pml4, addr, 0);
-	// 	}
-	// 	pml4_clear_page(cur->pml4, addr);
-	// 	addr += PGSIZE;
-	// 	page = spt_find_page(&cur->spt, addr);
-	// }
+	struct thread *cur = thread_current();
+	struct page *page = spt_find_page(&cur->spt, addr);
+	if(page == NULL){
+		return;
+	}
+	while(page != NULL){
+		struct info* info = (struct info*)page->uninit.aux;
+		if(pml4_is_dirty(cur->pml4, addr)){
+			lock_acquire(&filesys_lock);
+			file_write_at(info->file, addr, info->read_bytes, info->offset);
+			lock_release(&filesys_lock);
+			pml4_set_dirty(cur->pml4, addr, 0);
+		}
+		pml4_clear_page(cur->pml4, page->va);
+		addr += PGSIZE;
+		page = spt_find_page(&cur->spt, addr);
+	}
 }

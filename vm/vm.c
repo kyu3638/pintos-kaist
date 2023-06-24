@@ -309,13 +309,35 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 	}
 	return succ;
 }
-
+void spt_dealloc(struct hash_elem *e, void *aux){
+	struct page *page = hash_entry (e, struct page, h_elem);
+	ASSERT(is_user_vaddr(page->va));
+	ASSERT(is_kernel_vaddr(page));
+	free(page);
+}
 /* Free the resource hold by the supplemental page table */
 void supplemental_page_table_kill(struct supplemental_page_table *spt UNUSED)
 {
 	/* TODO: Destroy all the supplemental_page_table hold by thread and
 	 * TODO: writeback all the modified contents to the storage. */
+	if(!hash_empty(&spt->vm)){
+		struct hash_iterator i;
+		struct frame* frame;
+		hash_first (&i, &spt->vm);
+		while (hash_next(&i)){
+			struct page *target = hash_entry (hash_cur (&i), struct page, h_elem);
+			frame = target->frame;
+			//file-backed file인 경우
+			if(target->operations->type == VM_FILE){
+				do_munmap(target->va);
+			}
+		}
+		
+		hash_destroy(&spt->vm, spt_dealloc);
+		free(frame);
+	}
 }
+
 static unsigned vm_hash_func(const struct hash_elem *e, void *aux)
 {
 	struct page *curpage = hash_entry(e, struct page, h_elem);
