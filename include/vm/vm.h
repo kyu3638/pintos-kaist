@@ -4,8 +4,8 @@
 #include "threads/palloc.h"
 #include "kernel/hash.h"
 #include "threads/vaddr.h"
-
-struct list mmap_list;
+#include "threads/mmu.h"
+#include "userprog/syscall.h"
 
 enum vm_type
 {

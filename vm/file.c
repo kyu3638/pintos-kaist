@@ -124,5 +124,20 @@ do_mmap (void *addr, size_t length, int writable, struct file *file, off_t offse
 /* Do the munmap */
 void
 do_munmap (void *addr) {
-	
+	// struct thread *cur = thread_current();
+	// struct page *page = spt_find_page(&cur->spt, addr);
+	// if(page == NULL){
+	// 	return;
+	// }
+	// while(page != NULL){
+	// 	if(pml4_is_dirty(cur->pml4, addr)){
+	// 		lock_acquire(&filesys_lock);
+	// 		file_write_at(page->_file, addr, page->read_bytes, page->offset);
+	// 		lock_release(&filesys_lock);
+	// 		pml4_set_dirty(cur->pml4, addr, 0);
+	// 	}
+	// 	pml4_clear_page(cur->pml4, addr);
+	// 	addr += PGSIZE;
+	// 	page = spt_find_page(&cur->spt, addr);
+	// }
 }
