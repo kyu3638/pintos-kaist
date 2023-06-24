@@ -337,7 +337,7 @@ int process_add_file(struct file *f)
 struct file *process_get_file(int fd)
 {
 	struct thread *cur = thread_current();
-	if (fd < FD_MIN || fd >= FD_MAX)
+	if (fd < FD_MIN || fd > FD_MAX)
 	{
 		return NULL;
 	}
@@ -836,11 +836,11 @@ load_segment(struct file *file, off_t ofs, uint8_t *upage,
 		file_info->read_bytes = page_read_bytes;
 
 		/* TODO: Set up aux to pass information to the lazy_load_segment. */
-		void *aux = file_info;
 
-		if (!vm_alloc_page_with_initializer(VM_ANON, upage,
-											writable, lazy_load_segment, file_info))
+		if (!vm_alloc_page_with_initializer(VM_ANON, upage, writable, lazy_load_segment, file_info)){
+			free(file_info);
 			return false;
+		}
 
 		/* Advance. */
 		read_bytes -= page_read_bytes;

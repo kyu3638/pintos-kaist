@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include "threads/palloc.h"
 #include "kernel/hash.h"
+#include "threads/vaddr.h"
+
+struct list mmap_list;
 
 enum vm_type
 {
