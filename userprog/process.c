@@ -22,6 +22,8 @@
 #include "threads/vaddr.h"
 #include "intrinsic.h"
 #include "threads/synch.h"
+#define USERPROG
+#define VM
 #ifdef VM
 #include "vm/vm.h"
 #endif
@@ -782,9 +784,8 @@ lazy_load_segment(struct page *page, void *aux)
 	size_t page_read_bytes = ((struct info *)aux)->read_bytes;
 	size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
-	file_seek(file, offset);
 
-	if (file_read(file, load_frame->kva, page_read_bytes) != (int)page_read_bytes)
+	if (file_read_at(file, load_frame->kva, page_read_bytes, offset) != (int)page_read_bytes)
 	{
 		palloc_free_page(load_frame->kva);
 		return false;
