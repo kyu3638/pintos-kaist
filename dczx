@@ -1,0 +1,361 @@
+[33mcommit 39300cc8fa2ccfcba7082567e495b421bc013912[m[33m ([m[1;36mHEAD -> [m[1;32mhyungjun[m[33m)[m
+Author: Ubuntu <ubuntu@ip-172-31-13-39.ap-northeast-2.compute.internal>
+Date:   Sun May 28 08:25:00 2023 +0000
+
+    feat: pass priority-sema, condvar
+
+[33mcommit 7a6568b0ba1234b7c93ba6798e1ab6895ac79da1[m
+Author: Ubuntu <ubuntu@ip-172-31-13-39.ap-northeast-2.compute.internal>
+Date:   Sat May 27 20:39:41 2023 +0000
+
+    TODO: fix sema_up() to test/priority-condvar, sema
+
+[33mcommit 0fa4d1a8e54ad3defdc0af5782f8f50c69cd8fd9[m
+Author: Ubuntu <ubuntu@ip-172-31-13-39.ap-northeast-2.compute.internal>
+Date:   Sat May 27 12:52:42 2023 +0000
+
+    test alarm-priority done
+
+[33mcommit 2b6e63a1f3ed090273d7da7c01dcbe53c4527635[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Ubuntu <ubuntu@ip-172-31-13-39.ap-northeast-2.compute.internal>
+Date:   Fri May 26 18:31:40 2023 +0000
+
+    feat: Alarm clock complete
+
+[33mcommit e409ba4819bb5b5fbb64927441102d79329f0e12[m
+Author: Ubuntu <ubuntu@ip-172-31-13-39.ap-northeast-2.compute.internal>
+Date:   Fri May 26 18:27:41 2023 +0000
+
+    feat: alarm clock complete
+
+[33mcommit d5fbab226e6312a5a523317e270abe4bcb7860e6[m[33m ([m[1;31morigin/sangyoon[m[33m)[m
+Merge: 703396f 6b6d997
+Author: sjchoi1 <60088472+sjchoi1@users.noreply.github.com>
+Date:   Wed Apr 5 13:05:38 2023 +0900
+
+    Merge pull request #15 from shyeonn/master
+    
+    Fix typo
+
+[33mcommit 6b6d99725afde169cbf93b057f4a7e28623eccc2[m
+Author: Shyeonn <tkdgus2916@ajou.ac.kr>
+Date:   Sun Mar 5 04:06:51 2023 -0800
+
+    Fix typo
+
+[33mcommit 703396ff474095c3aebbffe9cead9d6ff81e61ad[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Mon May 30 17:10:44 2022 +0900
+
+    Update Make.vars
+
+[33mcommit d6862308de4bd9939818aaed04dc9d1540801627[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Tue May 3 14:13:47 2022 +0900
+
+    Update Grading.no-vm
+
+[33mcommit acd01e25a64481979a04e0b20e6cbde42b7ead15[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Tue May 3 14:13:34 2022 +0900
+
+    Update Grading.with-vm
+
+[33mcommit 9a6f5f68a2bb71410de03dc7f47939f99292681a[m
+Author: Hyunwoo Jung <hyunwooj@kaist.ac.kr>
+Date:   Mon Apr 4 17:19:04 2022 +0900
+
+    Update install.sh
+
+[33mcommit 75e4adbaefda2a08b021cc1ff79bc787c4001535[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Tue Mar 29 22:24:48 2022 +0900
+
+    Update bc-easy.c
+    
+    Updated `bc-easy.c` to address the issue (https://piazza.com/class/l052jywa5yy6t?cid=134).
+
+[33mcommit 93ecff98aa52480b1d3997a96da106b9a5dfa36f[m
+Author: sjchoi <sjchoi@casys.kaist.ac.kr>
+Date:   Mon Mar 7 08:16:16 2022 +0000
+
+    fixed install script to run on ubuntu 16.04 STANDARD-1 KCLOUD VM
+
+[33mcommit c38de3056d626442ad4b78a08c55acbd885547b1[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Tue Jun 8 17:49:09 2021 +0900
+
+    fix proj4 Make.tests
+
+[33mcommit 94ac0a67e29d5f3b56cb520aeded548e5ee98ef5[m
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Sun Jun 6 22:02:06 2021 +0900
+
+    fix Make.tests
+
+[33mcommit 87dedcd3b40d06bfb8f3286329f54b2a3a2ea9b2[m
+Merge: 8e8c343 b496798
+Author: Jinyoung Oh <sheogorath0213@kaist.ac.kr>
+Date:   Sun Jun 6 13:02:59 2021 +0900
+
+    Merge pull request #11 from casys-kaist/proj4-extra-tc
+    
+    add some test cases for proj4-extra
+
+[33mcommit b4967984c5f77835b07650750f517240fe89343c[m[33m ([m[1;31morigin/proj4-extra-tc[m[33m)[m
+Author: Oh Jinyoung <ohjinyoung@Ohui-MacBookPro.local>
+Date:   Sat Jun 5 21:51:57 2021 +0900
+
+    add some test cases for proj4-extra
+
+[33mcommit 8e8c343ce48f7551a80e81cc1a411ef249e35d68[m
+Author: junbongwe <robert7423@kaist.ac.kr>
+Date:   Sat May 22 12:49:12 2021 +0000
+
+    give more time to swap test cases
+
+[33mcommit 994640c5a57e722bea1fd46fc1cbd70869665bc6[m
+Author: junbongwe <robert7423@kaist.ac.kr>
+Date:   Wed May 19 12:04:28 2021 +0000
+
+    update  test case
+
+[33mcommit 0bf47ff99e62708bfb58d47fee316d88dd743b5a[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Mon May 17 13:11:20 2021 +0900
+
+    Extend swap disk for some test cases
+
+[33mcommit b729581cd8d637830b679a1b8daf76ee679daa58[m
+Merge: 55c7466 91e22ca
+Author: Hyunwoo Jung <hyunwooj@kaist.ac.kr>
+Date:   Thu Apr 15 19:52:51 2021 +0900
+
+    Merge pull request #5 from junbongwe/master
+    
+    Update lab3 rubric
+    Close hyunwooj/CS330-2021-Spring#89
+
+[33mcommit 91e22ca047ee376a9886cfb170d259dfdd70c716[m
+Author: junbongwe <robert7423@kaist.ac.kr>
+Date:   Thu Apr 15 19:43:18 2021 +0900
+
+    Update lab3 rubric
+
+[33mcommit 55c7466575fec1882ec426e2a45c56dfe11a6859[m
+Author: Gabin An <agb94@kaist.ac.kr>
+Date:   Tue Apr 13 11:52:36 2021 +0900
+
+    Fix Rubric.robustness
+
+[33mcommit 375b01ba9a4ec4bc360149c57c9989404c73ea5a[m
+Author: Gabin An <agb94@kaist.ac.kr>
+Date:   Mon Apr 12 11:51:15 2021 +0900
+
+    Update Rubric.robustness
+
+[33mcommit ee7443d7ae850c7cb704db6e8213c5cb67cacd0b[m
+Merge: 22e0ef5 6d0f8b0
+Author: Hyunwoo Jung <hyunwoojhw@gmail.com>
+Date:   Mon Mar 29 14:36:10 2021 +0900
+
+    Merge pull request #2 from agb94/lab2_rubric
+    
+    Update lab2 rubric
+    Close hyunwooj/CS330-2021-Spring#88
+
+[33mcommit 6d0f8b0abdbe19110b7f1336d5841a624bbe92a2[m
+Author: Gabin An <agb94@kaist.ac.kr>
+Date:   Sun Mar 28 22:03:42 2021 +0900
+
+    Update lab2 rubric
+
+[33mcommit 22e0ef57fa28d274fc72531a6bf76df78d3a4f8f[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Fri Mar 12 21:56:36 2021 +0900
+
+    Update lab1 rubric
+
+[33mcommit ee12da49ece8028d061c24790e42832761b5f30d[m
+Author: Hyunwoo Jung <hyunwoojhw@gmail.com>
+Date:   Mon Mar 8 21:00:59 2021 +0900
+
+    Create install.sh (#1)
+
+[33mcommit 8e59f2e37badee2259a8fe058ed048fd60f6f728[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Dec 31 18:57:04 2020 +0900
+
+    correct the term
+
+[33mcommit 8f145e76d95a8df6a44202d04557314b99070b66[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Sat Jun 20 16:31:39 2020 +0900
+
+    Fixed the equation for `fat_sectors`
+
+[33mcommit a870d0b7c5c709da8da621d01de2c2f048a33d25[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Jun 16 12:35:32 2020 +0900
+
+    Fix typo of template
+
+[33mcommit ff6faacedd98b4582a5f7e1e9e51f71b18536238[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Jun 16 00:07:33 2020 +0900
+
+    Fix typos
+
+[33mcommit 9d0ff70d1bcecf5f408be7783640bc2aa83ffa5d[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Jun 16 00:02:10 2020 +0900
+
+    Project4 out
+
+[33mcommit 5c2608189dcd1ad910d02ac4d0b22370662448a2[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Wed May 20 17:24:41 2020 +0900
+
+    Fix page-parallel test and comment
+
+[33mcommit e22b44141ff49052772a08167abe0836a43bdda1[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Mon May 18 15:55:55 2020 +0900
+
+    Fix typo
+
+[33mcommit c9d58aa8b289987f6b8d4545d62bfc5e85ad5d1f[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu May 7 19:44:37 2020 +0900
+
+    Update Makefile
+
+[33mcommit 50341140e201a9690072445a4c6df2eaea38a38e[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu May 7 19:40:05 2020 +0900
+
+    Update Makefile
+
+[33mcommit b74dcd652073a0103640e12d66805499803dc548[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu May 7 16:03:49 2020 +0900
+
+    Project3 out
+
+[33mcommit 8906e0811670c465b81221fe9069646e9cbde0f6[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Sun Apr 19 23:01:56 2020 +0900
+
+    Fix testcases for proj2
+    
+    - Fix possible race on child-rox
+    - Change multi-oom timeout to 600 (those who do slow implementation).
+
+[33mcommit 7794ae357b2163f31cfb71c9e7da4901cad03243[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Sat Apr 18 19:54:49 2020 +0900
+
+    Fix possible races on test
+
+[33mcommit bd448fe09b665f7b56148555ffb276c71f8112f0[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 22:52:45 2020 +0900
+
+    Update process.c
+    
+    This is only for the ease of merging of project 3.
+
+[33mcommit b9029d3eda76cdf3c632e537ddc5e26dfa43318b[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 22:16:27 2020 +0900
+
+    Fix dup2 (lib/user/syscall.c) to return
+    
+    This update includes miscellaneous things.
+
+[33mcommit 57e03997a7d930e4d610b98a4c0441c4748037be[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 21:07:02 2020 +0900
+
+    Update bad-write2.c
+
+[33mcommit d21ebbd6a8ab2c885db3b70fa509b22b0d3f26d0[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 21:06:47 2020 +0900
+
+    Update bad-read2.c
+
+[33mcommit 88850d3a33fc53c86f1a631265cf85974c3c7b42[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 21:06:28 2020 +0900
+
+    Update bad-jump2.c
+
+[33mcommit 34eab7e8120940891f6c14374f5e63fafad6a04d[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Thu Apr 9 10:57:25 2020 +0900
+
+    Fix user linker script
+    
+    Split text section and data section.
+
+[33mcommit a22176f525d5451fd030ccd031b1ba68776a5013[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Apr 7 15:17:21 2020 +0900
+
+    Update the project 2 template
+    
+    This is unnessary change for project 2.
+
+[33mcommit f9c460feb32f27ad1dd5144fe2a82fe31170bd06[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Mon Apr 6 21:29:49 2020 +0900
+
+    Update Make.vars
+
+[33mcommit 74307d309ade0e28d3f2eb4b34acaa14b9e65b33[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Fri Apr 3 17:25:46 2020 +0900
+
+    Project2 out
+
+[33mcommit 4c182069854d533b7e926090c414604e9cd056a8[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Mon Mar 30 22:33:31 2020 +0900
+
+    Add archive subcommand and fix templates
+    
+    The template changes NEVER affect to the project1.
+
+[33mcommit c033af03a9faaf89c1e9d7c19b3b13fd0f87bfd0[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Wed Mar 25 17:26:57 2020 +0900
+
+    Fix backtrace and tests.pm bug
+
+[33mcommit 8dc606459c59c2541b2bfe9faac826a73ddccf1e[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Mar 24 20:50:48 2020 +0900
+
+    Fix activate script
+    
+    The `source` push different name to $0 according to zsh and bash.
+    This fix supports both zsh and bash.
+
+[33mcommit 0fbc8842344f40eb0b55f9ec507a5877145adeb5[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Tue Mar 24 19:10:23 2020 +0900
+
+    Fix bug on activate
+
+[33mcommit 8452fdeef1f79ccf3d5dd79c67c25b060625995c[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Sat Mar 21 17:26:30 2020 +0900
+
+    Template for project1
+
+[33mcommit ce335fd990ea8a37477b25675e021a1b49f94f07[m
+Author: Minkyu Jung <hestati@kaist.ac.kr>
+Date:   Sat Mar 21 01:01:24 2020 +0900
+
+    Initialize the repository
