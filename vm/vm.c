@@ -149,6 +149,7 @@ vm_get_frame(void)
 	frame->kva = palloc_get_page(PAL_USER);
 	if (frame->kva == NULL)
 	{
+		frame->page = NULL;
 		PANIC("todo");
 	}
 	/* TODO: Fill this function. */
@@ -184,13 +185,14 @@ bool vm_try_handle_fault(struct intr_frame *f UNUSED, void *addr UNUSED, bool us
 	struct page *page = NULL;
 	/* TODO: Validate the fault */
 	/* TODO: Your code goes here */
-	if (is_kernel_vaddr(addr))
+	if (is_kernel_vaddr(addr) || !addr || !not_present)
 	{
 		return false;
 	}
 	page = spt_find_page(spt, addr);
 	if(page == NULL){
-		if(addr < USER_STACK && addr >= USER_STACK-(1<<20) && f->rsp - (1<<3) <= addr && addr <= thread_current()->stack_bottom){
+		void *rsp = !user ? thread_current()->tf.rsp : f->rsp;
+		if(rsp - (1<<3) <= addr && addr <= thread_current()->stack_bottom){
 			vm_stack_growth(addr);
 			thread_current()->stack_bottom = pg_round_down(addr);
 			return true;
@@ -242,6 +244,7 @@ vm_do_claim_page(struct page *page)
 	}
 	return false;
 }
+
 /* Initialize new supplemental page table */
 void supplemental_page_table_init(struct supplemental_page_table *spt UNUSED)
 {
