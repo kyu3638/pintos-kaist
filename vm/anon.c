@@ -64,6 +64,7 @@ anon_swap_out (struct page *page) {
 		disk_write(swap_disk, index * disk_slice_size + i, page->frame->kva + i * DISK_SECTOR_SIZE);
 	}
 	bitmap_set(swap_table, index, 1);
+	pml4_set_dirty(thread_current()->pml4, page->va, false);
 	pml4_clear_page(thread_current()->pml4, page->va);
 	anon_page->index = index;
 	page->frame = NULL;
