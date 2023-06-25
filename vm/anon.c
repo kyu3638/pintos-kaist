@@ -23,8 +23,11 @@ static const struct page_operations anon_ops = {
 void
 vm_anon_init (void) {
 	/* TODO: Set up the swap_disk. */
-	swap_disk = NULL;
+	swap_disk = disk_get(1,1);
+	disk_sector_t dsize = disk_size(swap_disk) / disk_slice_size;
+	swap_table = bitmap_create(dsize);
 }
+
 
 /* Initialize the file mapping */
 bool
@@ -33,12 +36,24 @@ anon_initializer (struct page *page, enum vm_type type, void *kva) {
 	page->operations = &anon_ops;
 
 	struct anon_page *anon_page = &page->anon;
+	anon_page->thread = thread_current();
+	anon_page->index = SIZE_MAX;
+	return true;
 }
 
 /* Swap in the page by read contents from the swap disk. */
 static bool
 anon_swap_in (struct page *page, void *kva) {
 	struct anon_page *anon_page = &page->anon;
+	// TODO: 디스크에 read시 해당 위치에 값이 없을 수도 있음.
+	size_t index = anon_page->index;
+	if(!bitmap_test(swap_table,index)) return false;
+	for(int i = 0; i < disk_slice_size; i++){
+		disk_read(swap_disk, index * disk_slice_size + i, kva + i * DISK_SECTOR_SIZE);
+	}
+	bitmap_set(swap_table,index,0);
+	// anon_page->index = -1;
+	return true;
 }
 
 /* Swap out the page by writing contents to the swap disk. */
@@ -51,4 +66,9 @@ anon_swap_out (struct page *page) {
 static void
 anon_destroy (struct page *page) {
 	struct anon_page *anon_page = &page->anon;
+}
+	if (page->frame != NULL) {
+		list_remove(&page->frame->frame_elem);
+		free(page->frame);
+	}
 }

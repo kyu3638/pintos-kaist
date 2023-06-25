@@ -54,6 +54,7 @@ struct page
 	bool writable; /* True일 경우 해당 주소에 write 가능 False일 경우 해당 주소에 write 불가능 */
 
 	bool is_loaded;	   /* 물리메모리의 탑재 여부를 알려주는 플래그 */
+	bool copy_writable;
 	struct file *_file; /* 가상주소와 맵핑된 파일 */
 
 	/* Memory Mapped File 에서 다룰 예정 */
