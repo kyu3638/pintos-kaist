@@ -337,7 +337,7 @@ int process_add_file(struct file *f)
 struct file *process_get_file(int fd)
 {
 	struct thread *cur = thread_current();
-	if (fd < FD_MIN || fd >= FD_MAX)
+	if (fd < FD_MIN || fd > FD_MAX)
 	{
 		return NULL;
 	}
@@ -373,6 +373,7 @@ int process_wait(tid_t child_tid UNUSED)
 	if (child_thread == NULL)
 		return -1;
 
+	for(int i = 0; i<10000000;i++){}
 	sema_down(&child_thread->exit_sema);
 	int child_exit_flag = child_thread->exit_flag;
 	list_remove(&child_thread->child_elem);
@@ -390,9 +391,9 @@ void process_exit(void)
 	palloc_free_multiple(cur->fdt, 3);
 	cur->fdt = NULL;
 	file_close(cur->running_file);
+	process_cleanup(); // pml4를 날림(이 함수를 call 한 thread의 pml4)
 	sema_up(&cur->exit_sema);
 	sema_down(&cur->free_sema);
-	process_cleanup(); // pml4를 날림(이 함수를 call 한 thread의 pml4)
 }
 
 /* Free the current process's resources. */
@@ -783,12 +784,16 @@ lazy_load_segment(struct page *page, void *aux)
 	size_t page_read_bytes = ((struct info *)aux)->read_bytes;
 	size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
-	// file_seek(file, offset);
-
-	if (file_read_at(file, load_frame->kva, page_read_bytes, offset) != (int)page_read_bytes)
+	//TODO: add gunhee Ego
+	uint8_t* kva = page->frame->kva;
+	if (kva == NULL){
+		free(page);
+		return false;
+	}
+	
+	if (file_read_at(file, load_frame->kva, page_read_bytes,offset) != (int)page_read_bytes)
 	{
-		// free(page);
-		palloc_free_page(page->frame->kva);
+		free(page);
 		return false;
 	}
 
@@ -833,11 +838,11 @@ load_segment(struct file *file, off_t ofs, uint8_t *upage,
 		file_info->read_bytes = page_read_bytes;
 
 		/* TODO: Set up aux to pass information to the lazy_load_segment. */
-		void *aux = file_info;
 
-		if (!vm_alloc_page_with_initializer(VM_ANON, upage,
-											writable, lazy_load_segment, file_info))
+		if (!vm_alloc_page_with_initializer(VM_ANON, upage, writable, lazy_load_segment, file_info)){
+			free(file_info);
 			return false;
+		}
 
 		/* Advance. */
 		read_bytes -= page_read_bytes;

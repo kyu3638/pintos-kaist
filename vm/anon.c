@@ -3,7 +3,7 @@
 #include "vm/vm.h"
 #include "devices/disk.h"
 
-#include "threads/vaddr.h"
+size_t disk_slice_size = PGSIZE/DISK_SECTOR_SIZE;
 
 /* DO NOT MODIFY BELOW LINE */
 static struct disk *swap_disk;
@@ -60,13 +60,25 @@ anon_swap_in (struct page *page, void *kva) {
 static bool
 anon_swap_out (struct page *page) {
 	struct anon_page *anon_page = &page->anon;
+	size_t index = bitmap_scan(swap_table, 0, 1, false);
+	if(index == BITMAP_ERROR){
+		return false;
+	}
+	for(int i = 0; i < disk_slice_size; i++){
+		disk_write(swap_disk, index * disk_slice_size + i, page->frame->kva + i * DISK_SECTOR_SIZE);
+	}
+	bitmap_set(swap_table, index, 1);
+	pml4_set_dirty(thread_current()->pml4, page->va, false);
+	pml4_clear_page(thread_current()->pml4, page->va);
+	anon_page->index = index;
+	page->frame = NULL;
+	return true;
 }
 
 /* Destroy the anonymous page. PAGE will be freed by the caller. */
 static void
 anon_destroy (struct page *page) {
 	struct anon_page *anon_page = &page->anon;
-}
 	if (page->frame != NULL) {
 		list_remove(&page->frame->frame_elem);
 		free(page->frame);

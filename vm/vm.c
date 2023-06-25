@@ -21,6 +21,7 @@ void vm_init(void)
 	register_inspect_intr();
 	/* DO NOT MODIFY UPPER LINES. */
 	/* TODO: Your code goes here. */
+	list_init(&frame_list);
 }
 
 /* Get the type of the page. This function is useful if you want to know the
@@ -118,12 +119,6 @@ void spt_remove_page(struct supplemental_page_table *spt, struct page *page)
 }
 
 /* Get the struct frame, that will be evicted. */
-static struct frame *
-vm_get_victim(void)
-{
-	struct frame *victim = NULL;
-	/* TODO: The policy for eviction is up to you. */
-
 static struct frame *vm_get_victim(void)
 {
 	struct list_elem *victim_elem;
@@ -168,10 +163,11 @@ vm_get_frame(void)
 	frame->kva = palloc_get_page(PAL_USER);
 	if (frame->kva == NULL)
 	{
-		PANIC("todo");
+		frame = vm_evict_frame();
 	}
 	/* TODO: Fill this function. */
 	frame->page = NULL;
+	list_push_back(&frame_list, &frame->frame_elem);
 	ASSERT(frame != NULL);
 	ASSERT(frame->page == NULL);
 	return frame;
@@ -248,7 +244,6 @@ void vm_dealloc_page(struct page *page)
 bool vm_claim_page(void *va UNUSED)
 {
 	struct page *page = spt_find_page(&thread_current()->spt, va);
-	/* TODO: Fill this function */
 	if (page == NULL)
 	{
 		return false;
@@ -276,6 +271,7 @@ vm_do_claim_page(struct page *page)
 	}
 	return false;
 }
+
 /* Initialize new supplemental page table */
 void supplemental_page_table_init(struct supplemental_page_table *spt UNUSED)
 {
@@ -381,6 +377,7 @@ void supplemental_page_table_kill(struct supplemental_page_table *spt UNUSED)
 		free(frame);
 	}
 }
+
 static unsigned vm_hash_func(const struct hash_elem *e, void *aux)
 {
 	struct page *curpage = hash_entry(e, struct page, h_elem);
