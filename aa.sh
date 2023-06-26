@@ -3,19 +3,12 @@ cd vm
 make clean
 make
 cd build
-pintos -v -k -T 60 -m 20   --fs-disk=10 -p tests/userprog/read-boundary:read-boundary -p ../../tests/userprog/sample.txt:sample.txt --swap-disk=4 -- -q   -f run read-boundary < /dev/null 2> tests/userprog/read-boundary.errors > tests/userprog/read-boundary.output
-perl -I../.. ../../tests/userprog/read-boundary.ck tests/userprog/read-boundary tests/userprog/read-boundary.result
 
 #! /bin/bash
 # 주의사항: vm 폴더 바로 하위에 본 파일을 저장하세요.
 # 돌리고 싶은 테스트의 경우 주석 처리를 해제하세요.
 # 본 파일을 executable로 만들고 싶다면 chmod u+x ${파일명}
 # executable로 만든 후 사용 방법은 쉘에서 다음의 명령어를 입력하시면 됩니다: ./vm_test_automate.sh
-
-make clean
-source ../activate
-make
-cd build
 
 # Project 1 - Threads
 # pintos -v -k -T 60 -m 20   --fs-disk=10  --swap-disk=4 -- -q  -threads-tests -f run alarm-single < /dev/null 2> tests/threads/alarm-single.errors > tests/threads/alarm-single.output

@@ -30,6 +30,11 @@
         "process.h": "c",
         "string.h": "c",
         "thread.h": "c",
-        "disk.h": "c"
+        "disk.h": "c",
+        "list.h": "c",
+        "bitmap.h": "c",
+        "__config": "c",
+        "__locale": "c",
+        "version": "c"
     }
 }

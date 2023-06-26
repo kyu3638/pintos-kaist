@@ -9,6 +9,7 @@
 #include "include/lib/kernel/bitmap.h"
 
 struct list frame_list;
+struct lock frame_lock;
 struct bitmap *swap_table;
 
 enum vm_type
@@ -56,7 +57,7 @@ struct page
 	struct frame *frame; /* Back reference for frame */
 
 	bool writable; /* True일 경우 해당 주소에 write 가능 False일 경우 해당 주소에 write 불가능 */
-
+	bool copy_writable;
 	struct file *_file; /* 가상주소와 맵핑된 파일 */
 
 	size_t offset;	   /* 읽어야 할 파일 오프셋 */
@@ -137,5 +138,6 @@ enum vm_type page_get_type(struct page *page);
 /* ADD: PROJECT 3 */
 static unsigned vm_hash_func(const struct hash_elem *e, void *aux);
 static bool vm_less_func(const struct hash_elem *a, const struct hash_elem *b);
+void frame_list_destroy(struct list *list);
 
 #endif /* VM_VM_H */

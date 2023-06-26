@@ -102,8 +102,9 @@ tid_t process_fork(const char *name, struct intr_frame *if_ UNUSED)
 	}
 	struct thread *child = get_child_process(tid); // child_list안에서 만들어진 child thread를 찾음
 
+	lock_acquire(&filesys_lock);
 	sema_down(&child->load_sema); // 자식이 메모리에 load 될때까지 기다림(blocked)
-
+	lock_release(&filesys_lock);
 	if (child->exit_flag == -1)
 	{
 		return TID_ERROR;
@@ -151,6 +152,8 @@ duplicate_pte(uint64_t *pte, void *va, void *aux)
 	if (!pml4_set_page(current->pml4, va, newpage, writable))
 	{
 		/* 6. TODO: if fail to insert page, do error handling. */
+		pml4_destroy(current->pml4);
+		current->exit_flag = -1;
 		palloc_free_page(newpage);
 		return false;
 	}
@@ -373,7 +376,6 @@ int process_wait(tid_t child_tid UNUSED)
 	if (child_thread == NULL)
 		return -1;
 
-	for(int i = 0; i<10000000;i++){}
 	sema_down(&child_thread->exit_sema);
 	int child_exit_flag = child_thread->exit_flag;
 	list_remove(&child_thread->child_elem);
@@ -394,6 +396,10 @@ void process_exit(void)
 	process_cleanup(); // pml4를 날림(이 함수를 call 한 thread의 pml4)
 	sema_up(&cur->exit_sema);
 	sema_down(&cur->free_sema);
+	if(cur == idle_thread){
+		frame_list_destroy(&frame_list);
+		bitmap_destroy(swap_table);
+	}
 }
 
 /* Free the current process's resources. */
@@ -404,6 +410,7 @@ process_cleanup(void)
 
 #ifdef VM
 	supplemental_page_table_kill(&curr->spt);
+	return ;
 #endif
 
 	uint64_t *pml4;
