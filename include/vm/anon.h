@@ -6,6 +6,7 @@ enum vm_type;
 
 struct anon_page {
     size_t index;
+    struct thread *thread;
 };
 
 void vm_anon_init (void);

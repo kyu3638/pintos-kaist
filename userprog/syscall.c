@@ -121,6 +121,8 @@ power_off()를 호출해서 Pintos를 종료합니다. (power_off()는 src/inclu
 */
 void halt(void)
 {
+   frame_list_destroy(&frame_list);
+   bitmap_destroy(swap_table);
    power_off();
 }
 /*
