@@ -31,7 +31,7 @@ static struct list ready_list;
 static struct list sleep_list;
 
 /* Idle thread. */
-static struct thread *idle_thread;
+// static struct thread *idle_thread;
 
 /* Initial thread, the thread running init.c:main(). */
 static struct thread *initial_thread;
@@ -404,7 +404,7 @@ void test_max_priority(void)
    //    ready_list에서 우선 순위가 가장 높은 쓰레드와 현재 쓰레드의 우선 순위를
    // 비교.
    //  현재 쓰레드의 우선수위가 더 작다면 thread_yield()
-   if (list_entry(ready_list.head.next, struct thread, elem)->priority > thread_get_priority())
+   if (list_entry(ready_list.head.next, struct thread, elem)->priority > thread_get_priority() && !intr_context())
    {
       thread_yield();
    }

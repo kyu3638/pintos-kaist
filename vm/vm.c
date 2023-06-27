@@ -22,6 +22,7 @@ void vm_init(void)
 	/* DO NOT MODIFY UPPER LINES. */
 	/* TODO: Your code goes here. */
 	list_init(&frame_list);
+	lock_init(&frame_lock);
 }
 
 /* Get the type of the page. This function is useful if you want to know the
@@ -123,7 +124,7 @@ static struct frame *vm_get_victim(void)
 {
 	struct list_elem *victim_elem;
 	struct frame *victim;
-
+	lock_acquire(&frame_lock);
 	while (true)
 	{
 		victim_elem = list_pop_front(&frame_list);
@@ -131,11 +132,15 @@ static struct frame *vm_get_victim(void)
 
 		if (!pml4_is_accessed(thread_current()->pml4, victim->page->va))
 			break;
-
+		// if (victim->page->copy_writable == false) {
 		pml4_set_accessed(thread_current()->pml4, victim->page->va, 0);
 		list_push_back(&frame_list, victim_elem);
+		// }
+		// else {
+		// 	continue;
+		// }
 	}
-
+	lock_release(&frame_lock);
 	return victim;
 }
 
@@ -163,11 +168,14 @@ vm_get_frame(void)
 	frame->kva = palloc_get_page(PAL_USER);
 	if (frame->kva == NULL)
 	{
+		free(frame);
 		frame = vm_evict_frame();
 	}
 	/* TODO: Fill this function. */
 	frame->page = NULL;
+	lock_acquire(&frame_lock);
 	list_push_back(&frame_list, &frame->frame_elem);
+	lock_release(&frame_lock);
 	ASSERT(frame != NULL);
 	ASSERT(frame->page == NULL);
 	return frame;
@@ -308,14 +316,15 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 				return false;
 
 			cpy_page->copy_writable = tmp_page->writable;
-			struct frame *cpy_frame = malloc(sizeof(struct frame));
+			struct frame *cpy_frame = (struct frame*)malloc(sizeof(struct frame));
 			cpy_page->frame = cpy_frame;
 			cpy_frame->page = cpy_page;
 			cpy_frame->kva = tmp_page->frame->kva;
 
 			struct thread *t = thread_current();
+			lock_acquire(&frame_lock);
 			list_push_back(&frame_list, &cpy_frame->frame_elem);
-
+			lock_release(&frame_lock);
 			if (!pml4_set_page(t->pml4, cpy_page->va, cpy_frame->kva, 0))
 			{
 				free(cpy_frame);
@@ -323,10 +332,15 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 			}
 			swap_in(cpy_page, cpy_frame->kva);
 			break;
+		case VM_FILE:
+			break;
 		default:
 			break;
 		}
 
+	}
+	return true;
+}
 		// if(page->uninit.aux != NULL){
 		// 	struct info *aux = (struct info*)malloc(sizeof(struct info));
 		// 	memcpy(aux, page->uninit.aux, sizeof(struct info));
@@ -343,9 +357,6 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 		// 	}
 		// 	memcpy(child_page->frame->kva, page->frame->kva, PGSIZE);
 		// }
-	}
-	return true;
-}
 void spt_dealloc(struct hash_elem *e, void *aux)
 {
 	struct page *page = hash_entry(e, struct page, h_elem);

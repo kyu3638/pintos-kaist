@@ -46,6 +46,7 @@ static bool
 anon_swap_in (struct page *page, void *kva) {
 	struct anon_page *anon_page = &page->anon;
 	// TODO: 디스크에 read시 해당 위치에 값이 없을 수도 있음.
+	if (anon_page->index == SIZE_MAX) return false;
 	size_t index = anon_page->index;
 	if(!bitmap_test(swap_table,index)) return false;
 	for(int i = 0; i < disk_slice_size; i++){
@@ -68,8 +69,9 @@ anon_swap_out (struct page *page) {
 		disk_write(swap_disk, index * disk_slice_size + i, page->frame->kva + i * DISK_SECTOR_SIZE);
 	}
 	bitmap_set(swap_table, index, 1);
-	pml4_set_dirty(thread_current()->pml4, page->va, false);
-	pml4_clear_page(thread_current()->pml4, page->va);
+	pml4_set_dirty(anon_page->thread->pml4, page->va, false);
+	pml4_clear_page(anon_page->thread->pml4, page->va);
+
 	anon_page->index = index;
 	page->frame = NULL;
 	return true;

@@ -121,6 +121,7 @@ power_off()를 호출해서 Pintos를 종료합니다. (power_off()는 src/inclu
 */
 void halt(void)
 {
+   bitmap_destroy(swap_table);
    power_off();
 }
 /*
@@ -165,7 +166,10 @@ THREAD_NAME이라는 이름을 가진 현재 프로세스의 복제본인 새 �
 pid_t fork(const char *thread_name)
 {
    struct thread *cur = thread_current();
-   return process_fork(thread_name, &cur->tf);
+   if (pml4_get_page(cur->pml4, thread_name) == NULL) exit(-1);
+   tid_t pid = process_fork(thread_name, &cur->tf);
+   if (pid == PID_ERROR) exit(-1);
+   return pid;
 }
 /*
 현재의 프로세스가 cmd_line에서 이름이 주어지는 실행가능한 프로세스로 변경됩니다. 이때 주어진 인자들을 전달합니다.
@@ -175,7 +179,7 @@ int exec(const char *cmd_line)
 {
    char *fn_copy;
    tid_t tid;
-
+   check_address(cmd_line);
    fn_copy = palloc_get_page(PAL_ZERO);
    if (fn_copy == NULL)
       return TID_ERROR;
@@ -186,7 +190,7 @@ int exec(const char *cmd_line)
       return -1;
    }
    palloc_free_page(fn_copy);
-   return tid;
+   // return tid;
 }
 /*
 자식 프로세스 (pid) 를 기다려서 자식의 종료 상태(exit status)를 가져옵니다.

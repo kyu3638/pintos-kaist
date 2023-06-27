@@ -10,6 +10,7 @@ struct file_page {
 	off_t offset;
 	struct file * file;
 	size_t read_bytes;
+	struct thread *thread;
 };
 
 void vm_file_init (void);

@@ -10,7 +10,7 @@
 
 struct list frame_list;
 struct bitmap *swap_table;
-
+struct lock frame_lock;
 enum vm_type
 {
 	/* page not initialized */
@@ -62,6 +62,8 @@ struct page
 	size_t offset;	   /* 읽어야 할 파일 오프셋 */
 	size_t read_bytes; /* 가상페이지에 쓰여져 있는 데이터 크기 */
 	size_t zero_bytes; /* 0으로 채울 남은 페이지의 바이트 */
+
+	struct thread *thread;
 
 	/* ‘vm_entry들을 위한 자료구조’ 부분에서 다룰 예정 */
 	struct hash_elem h_elem; /* 해시 테이블 Element */
@@ -137,5 +139,5 @@ enum vm_type page_get_type(struct page *page);
 /* ADD: PROJECT 3 */
 static unsigned vm_hash_func(const struct hash_elem *e, void *aux);
 static bool vm_less_func(const struct hash_elem *a, const struct hash_elem *b);
-
+// void frame_list_destroy(struct list *list);
 #endif /* VM_VM_H */

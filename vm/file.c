@@ -28,6 +28,7 @@ file_backed_initializer (struct page *page, enum vm_type type, void *kva) {
 	page->operations = &file_ops;
 
 	struct file_page *file_page = &page->file;
+	file_page->thread = thread_current();
 	
 }
 
@@ -58,13 +59,13 @@ file_backed_swap_out (struct page *page) {
 	file_page->file = ((struct info*)page->uninit.aux)->file;
 	file_page->read_bytes = ((struct info*)page->uninit.aux)->read_bytes;
 
-	if(pml4_is_dirty(thread_current()->pml4, page->va)){
+	if(pml4_is_dirty(file_page->thread->pml4, page->va)){
 		lock_acquire(&filesys_lock);
 		file_write_at(info->file, page->va, info->read_bytes, info->offset);
 		lock_release(&filesys_lock);
-		pml4_set_dirty(thread_current()->pml4, page->va, false);
+		pml4_set_dirty(file_page->thread->pml4, page->va, false);
 	}
-	pml4_clear_page(thread_current()->pml4,page->va);
+	pml4_clear_page(file_page->thread->pml4,page->va);
 	return true;
 }
 
