@@ -23,8 +23,8 @@ void syscall_handler(struct intr_frame *);
 struct page *check_address(void *addr);
 int process_add_file(struct file *f);
 struct file *process_get_file(int fd);
-void *mmap (void *addr, size_t length, int writable, int fd, off_t offset);
-void munmap (void *addr);
+void *mmap(void *addr, size_t length, int writable, int fd, off_t offset);
+void munmap(void *addr);
 
 /* System call.
  *
@@ -105,12 +105,14 @@ void syscall_handler(struct intr_frame *f UNUSED)
    case SYS_CLOSE: /* Close a file. */
       close(f->R.rdi);
       break;
+#ifdef VM
    case SYS_MMAP:
       f->R.rax = mmap(f->R.rdi, f->R.rsi, f->R.rdx, f->R.r10, f->R.r8);
       break;
    case SYS_MUNMAP:
       munmap(f->R.rdi);
       break;
+#endif
    default:
       thread_exit();
    }
@@ -121,8 +123,6 @@ power_off()를 호출해서 Pintos를 종료합니다. (power_off()는 src/inclu
 */
 void halt(void)
 {
-   frame_list_destroy(&frame_list);
-   bitmap_destroy(swap_table);
    power_off();
 }
 /*
@@ -290,7 +290,8 @@ int write(int fd, const void *buffer, unsigned size)
    else
    {
       struct file *file = process_get_file(fd);
-      if(file == NULL){
+      if (file == NULL)
+      {
          return -1;
       }
       lock_acquire(&filesys_lock);
@@ -356,15 +357,16 @@ struct page *check_address(void *addr)
    }
    struct page *page = NULL;
    page = spt_find_page(&thread_current()->spt, addr);
-   if(page == NULL){
+   if (page == NULL)
+   {
       exit(-1);
    }
    return page;
 #else
-   if (!is_user_vaddr(addr) || is_kernel_vaddr(addr) || pml4_get_page(curr->pml4, addr) == NULL)
-   {
-      exit(-1);
-   }
+      if (!is_user_vaddr(addr) || is_kernel_vaddr(addr) || pml4_get_page(curr->pml4, addr) == NULL)
+      {
+         exit(-1);
+      }
 #endif
 }
 
@@ -373,36 +375,45 @@ void check_valid_buffer(void *buffer, unsigned size, bool to_write)
    for (char i = 0; i < size; i++)
    {
       struct page *page = check_address(buffer + i);
-      if(to_write == true && page->writable == false){
+      if (to_write == true && page->writable == false)
+      {
          exit(-1);
       }
    }
 }
-void *mmap (void *addr, size_t length, int writable, int fd, off_t offset){
 
-   if(offset % PGSIZE != 0){
-		return NULL;
-	}
-	if(pg_round_down(addr)!= addr || is_kernel_vaddr(addr) || addr == NULL || (long long)length <= 0){
-		return NULL;
-	}
-	
-	if(spt_find_page(&thread_current()->spt, addr)){
-		return NULL;
-	}
-	
-	if(fd < FD_MIN){
-		exit(-1);
-	}
+void *mmap(void *addr, size_t length, int writable, int fd, off_t offset)
+{
 
-	struct file * target = process_get_file(fd);
-	if (target == NULL){
-		return NULL;
-	}
+   if (offset % PGSIZE != 0)
+   {
+      return NULL;
+   }
+   if (pg_round_down(addr) != addr || is_kernel_vaddr(addr) || addr == NULL || (long long)length <= 0)
+   {
+      return NULL;
+   }
+   if (spt_find_page(&thread_current()->spt, addr))
+   {
+      return NULL;
+   }
+
+   if (fd < FD_MIN)
+   {
+      exit(-1);
+   }
+
+   struct file *target = process_get_file(fd);
+   if (target == NULL)
+   {
+      return NULL;
+   }
    return do_mmap(addr, length, writable, target, offset);
 }
-void munmap (void *addr){
-   if(is_kernel_vaddr(addr) || !addr){
+void munmap(void *addr)
+{
+   if (is_kernel_vaddr(addr) || !addr)
+   {
       exit(-1);
    }
    do_munmap(addr);

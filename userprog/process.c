@@ -393,13 +393,9 @@ void process_exit(void)
 	palloc_free_multiple(cur->fdt, 3);
 	cur->fdt = NULL;
 	file_close(cur->running_file);
-	process_cleanup(); // pml4를 날림(이 함수를 call 한 thread의 pml4)
+	process_cleanup();
 	sema_up(&cur->exit_sema);
 	sema_down(&cur->free_sema);
-	if(cur == idle_thread){
-		frame_list_destroy(&frame_list);
-		bitmap_destroy(swap_table);
-	}
 }
 
 /* Free the current process's resources. */

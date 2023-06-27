@@ -138,6 +138,5 @@ enum vm_type page_get_type(struct page *page);
 /* ADD: PROJECT 3 */
 static unsigned vm_hash_func(const struct hash_elem *e, void *aux);
 static bool vm_less_func(const struct hash_elem *a, const struct hash_elem *b);
-void frame_list_destroy(struct list *list);
 
 #endif /* VM_VM_H */

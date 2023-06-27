@@ -15,6 +15,9 @@ void process_close_file(int fd);
 void remove_child_process(struct thread *cp);
 bool install_page(void *upage, void *kpage, bool writable);
 
+typedef int32_t off_t;
+typedef unsigned long size_t;
+
 struct info
 {
 	off_t offset;

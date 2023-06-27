@@ -296,13 +296,16 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 		switch (VM_TYPE(tmp_page->operations->type))
 		{
 		case VM_UNINIT:
+		{
 			struct info *aux = (struct info *)malloc(sizeof(struct info));
 			memcpy(aux, tmp_page->uninit.aux, sizeof(struct info));
 			aux->file = file_duplicate(aux->file);
 			if (!vm_alloc_page_with_initializer(VM_ANON, tmp_page->va, tmp_page->writable, tmp_page->uninit.init, aux))
 				free(aux);
 			break;
+		}
 		case VM_ANON:
+		{
 			vm_alloc_page(VM_ANON, tmp_page->va, tmp_page->writable);
 			cpy_page = spt_find_page(dst, tmp_page->va);
 			if (!cpy_page)
@@ -327,6 +330,7 @@ bool supplemental_page_table_copy(struct supplemental_page_table *dst UNUSED,
 			}
 			swap_in(cpy_page, cpy_frame->kva);
 			break;
+		}
 		}
 	}
 	return true;
