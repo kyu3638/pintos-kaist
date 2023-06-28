@@ -153,6 +153,8 @@ fat_boot_create (void) {
 void
 fat_fs_init (void) {
 	/* TODO: Your code goes here. */
+	fat_fs->fat_length = fat_fs->bs.total_sectors / fat_fs->bs.sectors_per_cluster;
+	fat_fs->data_start = fat_fs->bs.fat_start + fat_fs->bs.fat_sectors;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -162,9 +164,19 @@ fat_fs_init (void) {
 /* Add a cluster to the chain.
  * If CLST is 0, start a new chain.
  * Returns 0 if fails to allocate a new cluster. */
-cluster_t
-fat_create_chain (cluster_t clst) {
+cluster_t fat_create_chain(cluster_t clst) {
+	cluster_t init_clst = clst;
 	/* TODO: Your code goes here. */
+	while (++clst < fat_fs->fat_length) {
+		if (fat_get(clst) == 0) {
+			fat_put(clst, EOChain);
+			if (init_clst != 0) {
+				fat_put(init_clst, clst);
+			}
+			return clst;
+		}
+	}
+	return 0;
 }
 
 /* Remove the chain of clusters starting from CLST.
@@ -172,22 +184,31 @@ fat_create_chain (cluster_t clst) {
 void
 fat_remove_chain (cluster_t clst, cluster_t pclst) {
 	/* TODO: Your code goes here. */
+	while(clst != EOChain){
+		fat_put(clst, 0);
+		clst = fat_get(clst);
+	}
+	if(pclst != 0)
+		fat_put(pclst, EOChain);
 }
 
 /* Update a value in the FAT table. */
 void
 fat_put (cluster_t clst, cluster_t val) {
 	/* TODO: Your code goes here. */
+	fat_fs->fat[clst-1] = val;
 }
 
 /* Fetch a value in the FAT table. */
 cluster_t
 fat_get (cluster_t clst) {
 	/* TODO: Your code goes here. */
+	return fat_fs->fat[clst-1];
 }
 
 /* Covert a cluster # to a sector number. */
 disk_sector_t
 cluster_to_sector (cluster_t clst) {
 	/* TODO: Your code goes here. */
+	return fat_fs->data_start + (clst -1)* fat_fs->bs.sectors_per_cluster;
 }
